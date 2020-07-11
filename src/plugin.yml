@@ -1,0 +1,73 @@
+name: ChatManager
+version: 1.1
+main: ru.vadimka.chatmanager.ChatManager
+author: Vadimka
+commands:
+  chmreload:
+    description: Перезагружает плагин
+    usage: /chmreload
+  chr:
+    description: Помощь по плагину
+    usage: /chr
+  chrcreate:
+    description: Создает чат-комнту
+    usage: /chrcreate
+  chrremove:
+    description: Удаляет чат-комнату
+    usage: /chrremove <player>
+  chrjoin:
+    description: Зайти в комнату
+    usage: /chrjoin <player>
+  chrleave:
+    description: Покинуть комнату
+    usage: /chrleave
+  chrlist:
+    description: Список комнат
+    usage: /chrlist
+  chryes:
+    description: Принять пользователя
+    usage: /chryes
+  chroster:
+    description: Список пользователей группы
+    usage: /chroster
+  chrtoglobal:
+    description: Переключить глобальный чат
+    usage: /chrtoglobal
+permissions:
+  chatmanager.*:
+    description: Все преимущества плагина
+    default: op
+    children:
+      chatmanager.reload: true
+      chatmanager.adminchat: true
+      chatmanager.color: true
+      chatmanager.room.*: true
+  chatmanager.reload:
+    description: Перезагружает плагин
+    default: op
+  chatmanager.adminchat:
+    description: Получать и отправлять сообщения в админ-чат
+    default: op
+  chatmanager.color:
+    description: Писать в чат цветом
+    default: op
+  chatmanager.room.*:
+    description: Все преимущества комнат
+    default: op
+    children:
+      chatmanager.room.join: true
+      chatmanager.room.list: true
+      chatmanager.room.own: true
+      chatmanager.room.admin: true
+  chatmanager.room.list:
+    description: Спсок комнат
+    default: op
+  chatmanager.room.join:
+    description: Возможность вступать в комнаты
+    default: op
+  chatmanager.room.own:
+    description: Возможность создать свою комнату
+    default: op
+  chatmanager.room.admin:
+    description: Возможность управлять чужими комнатами
+    default: op
