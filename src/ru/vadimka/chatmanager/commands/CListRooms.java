@@ -1,31 +1,31 @@
 package ru.vadimka.chatmanager.commands;
 
-import java.util.Map;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import ru.vadimka.chatmanager.ChatManager;
 import ru.vadimka.chatmanager.Config;
-import ru.vadimka.chatmanager.Utils;
-import ru.vadimka.chatmanager.objects.Room;
+import ru.vadimka.chatmanager.Room;
 
 public class CListRooms implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String labale, String[] args) {
 		if (sender.isPermissionSet("chatmanager.room.list")) {
-			if (Config.rooms.isEmpty()) {
-				sender.sendMessage(Config.PLUGIN_PREFIX+" "+Config.ROOMS_LIST_EMPTY);
-			} else {
-				sender.sendMessage(Config.PLUGIN_PREFIX+" "+Config.ROOMS_LIST);
-				for (Map.Entry<String, Room> entry: Config.rooms.entrySet()) {
-					String key = entry.getKey();
-					sender.sendMessage(Config.PLUGIN_PREFIX+" "+Utils.getColors(Config.ROOMS_LIST_ITEM.replace("%ROOM%", key)));
-				}
+			HashMap<String, Room> rooms = ChatManager.listRooms();
+			String message = Config.ROOMS_LIST_HEADER;
+			for (Entry<String, Room> roomEntry : rooms.entrySet()) {
+				message += "\n"+Config.ROOMS_LIST
+						.replace("%ALIAS%", roomEntry.getValue().getPlugin().getName()+"::"+roomEntry.getValue().getAlias())
+						.replace("%NAME%", roomEntry.getValue().getName());
+				
 			}
-		} else {
-			sender.sendMessage(Config.PLUGIN_PREFIX+" "+Config.NOT_PERMITED);
-		}
+			sender.sendMessage(message);
+		} else
+			sender.sendMessage(Config.NOT_PERMITED);
 		return true;
 	}
 

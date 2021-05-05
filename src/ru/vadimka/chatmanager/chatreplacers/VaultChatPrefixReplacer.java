@@ -1,4 +1,4 @@
-package ru.vadimka.chatmanager.chatproviders;
+package ru.vadimka.chatmanager.chatreplacers;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -6,11 +6,11 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 
 import net.milkbowl.vault.chat.Chat;
 
-public class VaultChatProvider implements ChatProvider {
+public class VaultChatPrefixReplacer implements ChatTemplateReplacer {
 	
 	private Chat CHAT;
 	
-	public VaultChatProvider(Server server) {
+	public VaultChatPrefixReplacer(Server server) {
 		RegisteredServiceProvider<Chat> chatProvider = server.getServicesManager().getRegistration(Chat.class);
 		
 		if (chatProvider != null) CHAT = chatProvider.getProvider();
@@ -24,14 +24,13 @@ public class VaultChatProvider implements ChatProvider {
 			return false;
 		}
 	}
+	
+	@Override
+	public String template() { return "%PREFIX%"; }
 
 	@Override
-	public String getPlayerPrefix(Player player) {
+	public String replace(Player player) {
 		return CHAT.getPlayerPrefix(player);
 	}
 
-	@Override
-	public String getPlayerSuffix(Player player) {
-		return CHAT.getPlayerSuffix(player);
-	}
 }

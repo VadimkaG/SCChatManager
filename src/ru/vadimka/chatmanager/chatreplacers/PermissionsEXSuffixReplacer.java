@@ -1,12 +1,12 @@
-package ru.vadimka.chatmanager.chatproviders;
+package ru.vadimka.chatmanager.chatreplacers;
 
 import org.bukkit.entity.Player;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
-public class PermissionsEXChatProvider implements ChatProvider {
-	
+public class PermissionsEXSuffixReplacer implements ChatTemplateReplacer {
+
 	public static boolean dependsCheck() {
 		try {
 			Class.forName( "ru.tehkode.permissions.bukkit.PermissionsEx" );
@@ -17,13 +17,10 @@ public class PermissionsEXChatProvider implements ChatProvider {
 	}
 
 	@Override
-	public String getPlayerPrefix(Player player) {
-		PermissionUser user = PermissionsEx.getUser(player);
-		return user.getPrefix();
-	}
+	public String template() { return "%SUFFIX%"; }
 
 	@Override
-	public String getPlayerSuffix(Player player) {
+	public String replace(Player player) {
 		PermissionUser user = PermissionsEx.getUser(player);
 		return user.getSuffix();
 	}

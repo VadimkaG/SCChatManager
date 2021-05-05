@@ -1,36 +1,48 @@
 package ru.vadimka.chatmanager.commands;
 
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import ru.vadimka.chatmanager.ChatManager;
 import ru.vadimka.chatmanager.Config;
-import ru.vadimka.chatmanager.Utils;
-import ru.vadimka.chatmanager.objects.Room;
+import ru.vadimka.chatmanager.Room;
 
 public class CListRoomUsers implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String labale, String[] args) {
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			if (sender.isPermissionSet("chatmanager.room.join")) {
-				String playerRoom = Config.playerStat.get(player.getName()).getRoom();
-				Room room = Config.rooms.get(playerRoom);
-				if (!playerRoom.equalsIgnoreCase("")) {
-					player.sendMessage(Config.ROOMS_LIST_USERS);
-					for (Player p : room.getPlayers()) {
-						player.sendMessage(Utils.getColors(Config.ROOMS_LIST_USERS_ITEM.replace("%NAME%", p.getName())));
-					}
-				} else {
-					sender.sendMessage(Config.PLUGIN_PREFIX+" "+Config.ROOM_NOT_JOINED);
-				}
-			} else {
-				sender.sendMessage(Config.PLUGIN_PREFIX+" "+Config.NOT_PERMITED);
-			}
-		} else {
-			sender.sendMessage("Эта команда только для игроков");
+		if (args.length != 1)
+			return false;
+		Room room = ChatManager.getRoomGlobal(args[0]);
+		
+		if (room == null) {
+			sender.sendMessage(Config.ROOM_NOT_EXISTS);
+			return true;
 		}
+		
+		if (sender instanceof Player) {
+			Player player = (Player)sender;
+			if (!player.isPermissionSet("chatmanager.room.roster")) {
+				sender.sendMessage(Config.NOT_PERMITED);
+				return true;
+			}
+			if (!player.isPermissionSet("chatmanager.room.roster.other") && !room.hasPlayer(player)) {
+				sender.sendMessage(Config.NOT_PERMITED);
+				return true;
+			}
+		}
+		
+		List<Player> players = room.getPlayers();
+		
+		String message = Config.ROOMS_ROSTER_HEADER;
+		for (Player player : players) {
+			message += "\n"+(Config.ROOMS_ROSTER.replaceAll("%NAME%", player.getName()));
+		}
+		sender.sendMessage(message);
+		
 		return true;
 	}
 
