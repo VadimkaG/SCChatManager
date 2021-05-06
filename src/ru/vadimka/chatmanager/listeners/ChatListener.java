@@ -1,6 +1,7 @@
 package ru.vadimka.chatmanager.listeners;
 
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -116,7 +117,11 @@ public class ChatListener implements Listener {
 		
 		// Убираем управляющие символы комнаты
 		if (sendToRoom != null) {
-			message = message.replaceFirst(sendToRoom.getChatCommand(), "");
+			try {
+				message = message.replaceFirst(sendToRoom.getChatCommand(), "");
+			} catch (PatternSyntaxException ex) {
+				message = message.replaceFirst("\\"+sendToRoom.getChatCommand(), "");
+			}
 			event.setMessage(message);
 		}
 		// ============================

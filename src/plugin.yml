@@ -1,5 +1,5 @@
 name: SCChatManager
-version: 2
+version: 2.1
 api-version: 1.16
 main: ru.vadimka.chatmanager.ChatManager
 author: Vadimka
